@@ -143,9 +143,9 @@ def perform_encrypt_base(message, password)
 end
 
 def usage()
-  puts "  ./twitcrypt -dt <tweet url> - Get's the content of the tweet and decrypts it. Doesn't work at the moment"
-  puts "  ./twitcrypt -ed - This is primarily for testing; displays the encrypted message."
-  puts "  ./twitcrypt -dd <message - optional> - This is primarily for testing; decrypts the message."
+  puts "  ./twitcrypt.rb -dt <tweet url> - Get's the content of the tweet and decrypts it. Doesn't work at the moment"
+  puts "  ./twitcrypt.rb -ed - This is primarily for testing; displays the encrypted message."
+  puts "  ./twitcrypt.rb -dd <message - optional> - This is primarily for testing; decrypts the message."
   
   #exit with an error
   exit(-1)
