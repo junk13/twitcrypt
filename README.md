@@ -12,7 +12,7 @@ This is still beta software, so I would use caution with sensitive data until fu
     
 For all options, you will be prompted for the key, so it is not logged to your shell's history. The `-ed` will prompt for the message, and `-dd` will prompt if no message is passed in.
 
-The maximum message size is 144 bytes. The message is 'encoded' into 100 unicode characters.
+The maximum message size is 138 bytes. The message is 'encoded' into 100 unicode characters.
 
 ###Implementation Details
 
