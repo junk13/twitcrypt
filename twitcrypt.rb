@@ -126,7 +126,7 @@ def perform_decrypt_message()
   return perform_decrypt_base(ask("Message:"), password)
 end
 
-def perform_decrypt_tweet(url)
+def perform_decrypt_tweet(url, password)
   #TODO: Get tweet content
 end
 
@@ -143,20 +143,29 @@ def perform_encrypt_base(message, password)
 end
 
 def usage()
-  puts "Do it right..."
+  puts "  ./twitcrypt -ed <message> <key> - This is primarily for testing; displays the encrypted message."
+  puts "  ./twitcrypt -dt <tweet url> <key>` - Get's the content of the tweet and decrypts it. Doesn't work at the moment"
+  puts "  ./twitcrypt -dd <message> <key>` - This is primarily for testing; decrypts the message passed in."
 end
 
 def main()
-  case ARGV[0]
-    when "-dt"
-      puts "Message: " + perform_decrypt_tweet(ARGV[1])
-    when "-dd"
-      puts perform_decrypt_base(ARGV[1], ARGV[2])
-    when "-dp"
-      puts "Message: " + perform_decrypt_message()
-    when "-ed"
-      puts perform_encrypt_base(ARGV[1], ARGV[2])
-    else
+  puts "twitcrypt - Encrypted Twitter Communications"
+  puts "Copyright (c) 2013 Adam Caudill <adam@adamcaudill.com>"
+  puts "EXPERIMENTAL - This is experimental, do not use for sensitive data!"
+  puts ""
+  
+  if (ARGV.count != 3)
+    case ARGV[0]
+      when "-dt"
+        puts "Message: " + perform_decrypt_tweet(ARGV[1], ARGV[2])
+      when "-dd"
+        puts perform_decrypt_base(ARGV[1], ARGV[2])
+      when "-ed"
+        puts perform_encrypt_base(ARGV[1], ARGV[2])
+      else
+        usage
+      end
+  else
       usage
   end
 end
