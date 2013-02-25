@@ -121,11 +121,6 @@ def perform_decrypt_base(input, password)
   return decrypted
 end
 
-def perform_decrypt_message()
-  password = get_password
-  return perform_decrypt_base(ask("Message:"), password)
-end
-
 def perform_decrypt_tweet(url, password)
   #TODO: Get tweet content
 end
@@ -143,9 +138,12 @@ def perform_encrypt_base(message, password)
 end
 
 def usage()
-  puts "  ./twitcrypt -ed <message> <key> - This is primarily for testing; displays the encrypted message."
-  puts "  ./twitcrypt -dt <tweet url> <key>` - Get's the content of the tweet and decrypts it. Doesn't work at the moment"
-  puts "  ./twitcrypt -dd <message> <key>` - This is primarily for testing; decrypts the message passed in."
+  puts "  ./twitcrypt -dt <tweet url> - Get's the content of the tweet and decrypts it. Doesn't work at the moment"
+  puts "  ./twitcrypt -ed - This is primarily for testing; displays the encrypted message."
+  puts "  ./twitcrypt -dd <message - optional> - This is primarily for testing; decrypts the message."
+  
+  #exit with an error
+  exit(-1)
 end
 
 def main()
@@ -154,20 +152,28 @@ def main()
   puts "EXPERIMENTAL - This is experimental, do not use for sensitive data!"
   puts ""
   
-  if (ARGV.count == 3)
-    case ARGV[0]
-      when "-dt"
-        puts "Message: " + perform_decrypt_tweet(ARGV[1], ARGV[2])
-      when "-dd"
-        puts perform_decrypt_base(ARGV[1], ARGV[2])
-      when "-ed"
-        puts perform_encrypt_base(ARGV[1], ARGV[2])
+  case ARGV[0]
+    when "-dt"
+      usage if ARGV.count != 2
+        
+      puts "Message: " + perform_decrypt_tweet(ARGV[1], get_password)
+    when "-dd"
+      if ARGV.count == 1
+        message = ask("Message:")
+      else if ARGV.count == 2
+        message = ARGV[1]
       else
         usage
       end
-  else
+        
+      puts perform_decrypt_base(message, get_password)
+    when "-ed"
+      usage if ARGV.count != 1
+        
+      puts perform_encrypt_base(ask("Message:"), get_password)
+    else
       usage
-  end
+    end
 end
 
 main
