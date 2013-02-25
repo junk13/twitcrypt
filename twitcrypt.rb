@@ -7,7 +7,6 @@
 #
 
 require 'openssl'
-require 'digest/sha2'
 require 'rubygems'
 require 'highline/import'
 
@@ -76,12 +75,11 @@ def decode(msg)
 end
 
 def encrypt(msg, ivSeed, key)
-  sha256 = Digest::SHA2.new(256)
   aes = OpenSSL::Cipher.new("AES-256-CBC")
   
   aes.encrypt
-  aes.key = (key + sha256.digest(key)).slice(0, 32)
-  aes.iv = sha256.digest(key + ivSeed).slice(0, 16)
+  aes.key = pbkdf2(key, 32)
+  aes.iv = pbkdf2(ivSeed, 16)
   aes.padding = 0
   
   data = aes.update(msg) + aes.final
@@ -90,12 +88,11 @@ def encrypt(msg, ivSeed, key)
 end
 
 def decrypt(msg, ivSeed, key)
-  sha256 = Digest::SHA2.new(256)
   aes = OpenSSL::Cipher.new("AES-256-CBC")
 
   aes.decrypt
-  aes.key = (key + sha256.digest(key)).slice(0, 32)
-  aes.iv = sha256.digest(key + ivSeed).slice(0, 16)
+  aes.key = pbkdf2(key, 32)
+  aes.iv = pbkdf2(ivSeed, 16)
   aes.padding = 0
 
   data = aes.update(msg) + aes.final
@@ -105,6 +102,14 @@ end
 
 def getIvSeed()
   (0...6).map{65.+(rand(25)).chr}.join
+end
+
+def pbkdf2(password, length)
+  iter = 25000
+  salt = "!@{$%^&*()_+}"
+  ret = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, iter, length)
+  
+  return ret
 end
 
 def get_password(prompt="Enter Encryption Key:")
@@ -160,7 +165,7 @@ def main()
     when "-dd"
       if ARGV.count == 1
         message = ask("Message:")
-      else if ARGV.count == 2
+      elsif ARGV.count == 2
         message = ARGV[1]
       else
         usage
@@ -169,7 +174,7 @@ def main()
       puts perform_decrypt_base(message, get_password)
     when "-ed"
       usage if ARGV.count != 1
-        
+
       puts perform_encrypt_base(ask("Message:"), get_password)
     else
       usage
@@ -177,4 +182,3 @@ def main()
 end
 
 main
-
