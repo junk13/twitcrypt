@@ -154,7 +154,7 @@ def main()
   puts "EXPERIMENTAL - This is experimental, do not use for sensitive data!"
   puts ""
   
-  if (ARGV.count != 3)
+  if (ARGV.count == 3)
     case ARGV[0]
       when "-dt"
         puts "Message: " + perform_decrypt_tweet(ARGV[1], ARGV[2])
